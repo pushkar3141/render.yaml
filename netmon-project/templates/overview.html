@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+{% block title %}Overview{% endblock %}
+{% block content %}
+{% set sc = s.severity_counts %}
+<div class="head">
+  <div>
+    <h1>{{ up.filename }}</h1>
+    <p class="muted">Traffic from {{ s.start[:16] }} to {{ s.end[11:16] }}, analysed in {{ up.seconds }} s</p>
+  </div>
+  <form method="post" action="{{ url_for('make_report', upload_id=up.id) }}">
+    <button class="btn" type="submit">Generate report</button>
+  </form>
+</div>
+
+<section class="figures" aria-label="Summary">
+  <div><b>{{ s.flows|num }}</b><span>flows analysed</span></div>
+  <div><b>{{ s.unique_sources|num }}</b><span>source IPs</span></div>
+  <div><b>{{ s.flagged_core|num }}</b><span>flows flagged by rules R1–R4</span></div>
+  <div class="crit"><b>{{ sc.get('Critical', 0)|num }}</b><span>critical alerts</span></div>
+  <div><b>{{ sc.get('High', 0)|num }}</b><span>high alerts</span></div>
+</section>
+
+<section class="panel hero">
+  <h2>Traffic over time</h2>
+  <p class="legend-note"><i></i>Shaded minutes had a critical or high alert. Hover the line for flow counts.</p>
+  <div id="tl" class="chart tall"></div>
+</section>
+
+<section class="panel">
+  <div class="head" style="margin-bottom:.4rem">
+    <h2>Critical and high alerts</h2>
+    <a href="{{ url_for('alerts_page', upload_id=up.id) }}">All {{ n_alerts|num }} alerts</a>
+  </div>
+  {% if top %}
+  <div class="tablewrap"><table>
+    <thead><tr><th>First seen</th><th>Severity</th><th>Alert</th><th>Source</th><th>Destination</th><th>Evidence</th></tr></thead>
+    <tbody>
+    {% for a in top %}
+      <tr><td>{{ a.first_seen.strftime('%H:%M') }}–{{ a.last_seen.strftime('%H:%M') }}</td>
+        <td><span class="sev {{ a.severity }}">{{ a.severity }}</span></td><td>{{ a.name }}</td>
+        <td>{% if a.src_ip != 'multiple' %}<a href="{{ url_for('ip_page', upload_id=up.id, ip=a.src_ip) }}">{{ a.src_ip }}</a>{% else %}multiple{% endif %}</td>
+        <td><a href="{{ url_for('ip_page', upload_id=up.id, ip=a.dst_ip) }}">{{ a.dst_ip }}</a>{% if a.dst_port is not none %}:{{ a.dst_port }}{% endif %}</td>
+        <td class="small">{{ a.evidence }}</td></tr>
+    {% endfor %}
+    </tbody></table></div>
+  {% else %}
+    <p class="empty">No critical or high alerts in this traffic. Lower-priority statistical flags are on the Alerts page.</p>
+  {% endif %}
+</section>
+
+<div class="grid3">
+  <section class="panel"><h2>Alerts by type</h2>
+    {% if s.alerts_by_rule %}
+    <table><thead><tr><th>Alert</th><th>Severity</th><th class="num">Alerts</th></tr></thead><tbody>
+    {% for r in s.alerts_by_rule|sort(attribute='alerts', reverse=true)|sort(attribute='severity_rank', reverse=true) %}
+      <tr><td>{{ r.name }}</td><td><span class="sev {{ r.severity }}">{{ r.severity }}</span></td><td class="num">{{ r.alerts|num }}</td></tr>
+    {% endfor %}</tbody></table>
+    <p class="small muted">Medium and low alerts come from the statistical and Isolation Forest detectors and need a person to review them.</p>
+    {% else %}<p class="empty">No alerts.</p>{% endif %}
+  </section>
+  <section class="panel"><h2>Top talkers</h2><div id="talkers" class="chart"></div></section>
+  <section class="panel"><h2>Top destination ports</h2><div id="ports" class="chart"></div></section>
+</div>
+<div class="grid2">
+  <section class="panel"><h2>Protocols</h2><div id="proto" class="chart short"></div></section>
+  <section class="panel"><h2>Ground-truth labels in this file</h2>
+    {% if s.labels %}
+    <table><thead><tr><th>Label</th><th class="num">Flows</th></tr></thead><tbody>
+      {% for k, v in s.labels.items() %}<tr><td>{{ k }}</td><td class="num">{{ v|num }}</td></tr>{% endfor %}
+    </tbody></table>
+    <p class="small muted">Labels come with the CIC-IDS2017 data and are not used for detection; they let you check the alerts.</p>
+    {% else %}<p class="empty">This file has no labels, which is normal for live captures.</p>{% endif %}
+  </section>
+</div>
+{% endblock %}
+{% block scripts %}
+<script>
+const S = {{ s|tojson }};
+timeline("tl", S.timeline, S.alert_windows);
+hbar("talkers", S.top_talkers.map(r => r.src_ip), S.top_talkers.map(r => r.flows), "Flows sent");
+hbar("ports", S.top_ports.map(r => r.port + " " + (r.service === "OTHER" ? "" : r.service)), S.top_ports.map(r => r.flows), "Flows received", C.aqua);
+protocols("proto", S.protocols);
+</script>
+{% endblock %}

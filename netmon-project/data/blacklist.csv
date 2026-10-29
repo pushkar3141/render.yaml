@@ -1,0 +1,5 @@
+# Threat-intelligence blacklist: one IP per line under the 'ip' header.
+# Replace these example entries with a live feed (e.g. abuse.ch, Spamhaus DROP) in production.
+ip,source,note
+203.0.113.66,example,documentation range placeholder
+198.51.100.23,example,documentation range placeholder

@@ -1,0 +1,6 @@
+file,flows,seconds,sec_per_100k
+Monday (benign reference),529903,4.79,0.9
+Tuesday,445892,4.34,0.97
+Wednesday,692682,5.3,0.76
+Friday PortScan,286431,2.61,0.91
+Friday DDoS,225743,1.24,0.55

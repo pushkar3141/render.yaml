@@ -1,0 +1,6 @@
+file,flows,benign,attacks
+Monday (benign reference),529903,529903,none
+Tuesday,445892,432057,"FTP-Patator 7,938; SSH-Patator 5,897"
+Wednesday,692682,440010,"DoS Hulk 231,073; DoS GoldenEye 10,293; DoS slowloris 5,796; DoS Slowhttptest 5,499; Heartbleed 11"
+Friday PortScan,286431,127501,"PortScan 158,930"
+Friday DDoS,225743,97716,"DDoS 128,027"

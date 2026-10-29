@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block title %}Sign in{% endblock %}
+{% block bare %}
+<main class="login">
+  <div class="panel hero">
+    <svg width="40" height="40" viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="6" fill="#14202d"/><path d="M4 20h6l3-9 4 14 3-8h8" fill="none" stroke="#5598e7" stroke-width="2.5"/></svg>
+    <h1 style="margin:.6rem 0 .2rem">NetMon</h1>
+    <p class="muted" style="margin-top:0">Network security monitoring for your lab network.</p>
+    {% for m in get_flashed_messages() %}<div class="flash" role="alert">{{ m }}</div>{% endfor %}
+    <form method="post">
+      <label for="pw">Admin password</label><br>
+      <input id="pw" type="password" name="password" autofocus required style="width:100%;margin:.4rem 0 1rem">
+      <button class="btn" type="submit">Sign in</button>
+    </form>
+  </div>
+</main>
+{% endblock %}

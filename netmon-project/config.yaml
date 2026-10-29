@@ -1,0 +1,38 @@
+# Detection thresholds. Values were tuned on benign traffic (CIC-IDS2017 Monday)
+# so that no rule fires on a normal working day; see scripts/evaluate.py.
+
+port_scan:            # R1
+  window: 1min
+  min_distinct_ports: 30      # Monday benign maximum was 10 (client-initiated flows)
+  max_port: 32767             # service-port range; replies to ephemeral ports are ignored
+  critical_ports: 100
+
+brute_force:          # R2
+  window: 1min
+  ports: [21, 22, 23, 3389]
+  min_attempts: 20            # Monday benign maximum was 6 per minute
+
+traffic_spike:        # R3
+  window: 1min
+  z_threshold: 5.0            # versus the destination's own benign baseline
+  min_flows: 100              # ignore tiny hosts
+  ddos_min_sources: 10
+
+blacklist:            # R4
+  path: data/blacklist.csv
+
+zscore:               # R5
+  threshold: 3.0              # |z| of log(1 + bytes) against the benign baseline
+
+iqr:                  # R6
+  k: 3.0                      # Q3 + k*IQR on log(1 + bytes) ("extreme" fence)
+
+isolation_forest:     # optional
+  enabled: true
+  contamination: 0.02
+  n_estimators: 100
+  train_sample: 100000
+  random_state: 42
+
+alerts:
+  merge_gap: 5min             # hits from the same rule and hosts closer than this become one alert

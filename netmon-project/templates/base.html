@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{% block title %}NetMon{% endblock %} · Network Security Monitor</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600&family=Barlow+Condensed:wght@500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%2314202d'/%3E%3Cpath d='M4 20h6l3-9 4 14 3-8h8' fill='none' stroke='%232a78d6' stroke-width='2.5'/%3E%3C/svg%3E">
+{% block head %}{% endblock %}
+</head>
+<body>
+{% if session.user %}
+<div class="shell">
+  <aside class="rail">
+    <a class="brand" href="{{ url_for('index') }}">
+      <svg width="30" height="30" viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="6" fill="#22344a"/><path d="M4 20h6l3-9 4 14 3-8h8" fill="none" stroke="#5598e7" stroke-width="2.5"/></svg>
+      <b>NetMon</b>
+    </a>
+    <nav aria-label="Main">
+      {% set ep = request.endpoint %}
+      {% if up is defined and up %}
+      <span class="group">{{ up.filename }}</span>
+      <a href="{{ url_for('overview', upload_id=up.id) }}" class="{{ 'on' if ep=='overview' }}">Overview</a>
+      <a href="{{ url_for('alerts_page', upload_id=up.id) }}" class="{{ 'on' if ep=='alerts_page' }}">Alerts</a>
+      {% endif %}
+      <span class="group">System</span>
+      <a href="{{ url_for('upload') }}" class="{{ 'on' if ep=='upload' }}">Analyse traffic</a>
+      <a href="{{ url_for('reports_page') }}" class="{{ 'on' if ep=='reports_page' }}">Reports</a>
+      <a href="{{ url_for('evaluation') }}" class="{{ 'on' if ep=='evaluation' }}">Evaluation</a>
+      <a href="{{ url_for('settings') }}" class="{{ 'on' if ep=='settings' }}">Settings</a>
+    </nav>
+    <div class="foot">
+      Storage: {{ 'Supabase' if storage_kind=='supabase' else 'local folder' }}<br>
+      <a href="{{ url_for('logout') }}">Sign out</a>
+    </div>
+  </aside>
+  <main>
+    {% for m in get_flashed_messages() %}<div class="flash" role="status">{{ m }}</div>{% endfor %}
+    {% block content %}{% endblock %}
+  </main>
+</div>
+{% else %}
+  {% block bare %}{% endblock %}
+{% endif %}
+<script src="{{ url_for('static', filename='plotly.min.js') }}"></script>
+<script src="{{ url_for('static', filename='charts.js') }}"></script>
+{% block scripts %}{% endblock %}
+</body>
+</html>

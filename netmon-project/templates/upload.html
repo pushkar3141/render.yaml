@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block title %}Analyse traffic{% endblock %}
+{% block content %}
+<div class="head"><div><h1>Analyse traffic</h1>
+<p class="muted">Upload flow records and NetMon runs every detector over them.</p></div></div>
+<div class="grid2">
+  <section class="panel">
+    <h2>Upload a flow file</h2>
+    <form method="post" enctype="multipart/form-data">
+      <div class="drop">
+        <label for="file">CSV or gzipped CSV, up to 40 MB and 300,000 flows</label><br><br>
+        <input id="file" type="file" name="file" accept=".csv,.gz" required>
+      </div>
+      <p class="small muted">Accepted formats: a CICFlowMeter labelled-flow CSV (as in CIC-IDS2017), or a file exported by
+        <code>scripts/capture.py</code> with the columns ts, src_ip, src_port, dst_ip, dst_port, protocol,
+        duration_us, fwd_pkts, bwd_pkts, fwd_bytes, bwd_bytes.</p>
+      <button class="btn" type="submit">Upload and analyse</button>
+    </form>
+  </section>
+  <section class="panel">
+    <h2>Or try a CIC-IDS2017 sample</h2>
+    <p class="small muted">Contiguous slices of the dataset, so the per-minute rules see real traffic rates.</p>
+    <form method="post" class="demo-list">
+      {% for key, label in demos.items() %}
+      <button type="submit" name="demo" value="{{ key }}"><b>{{ label.split(':')[0] }}</b><span class="muted">{{ label.split(':')[1] }}</span></button>
+      {% endfor %}
+    </form>
+  </section>
+</div>
+{% if all_uploads %}
+<section class="panel" style="margin-top:1.2rem"><h2>Previous analyses</h2>
+<table><thead><tr><th>File</th><th>Analysed</th><th class="num">Flows</th><th class="num">Flagged by rules</th></tr></thead><tbody>
+{% for u in all_uploads %}<tr><td><a href="{{ url_for('overview', upload_id=u.id) }}">{{ u.filename }}</a></td><td>{{ u.created_at.strftime('%d %b %Y %H:%M') }} UTC</td><td class="num">{{ u.flows|num }}</td><td class="num">{{ u.flagged_flows|num }}</td></tr>{% endfor %}
+</tbody></table></section>
+{% endif %}
+{% endblock %}

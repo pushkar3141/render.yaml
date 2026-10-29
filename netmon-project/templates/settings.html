@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block title %}Settings{% endblock %}
+{% block content %}
+<div class="head"><div><h1>Detection settings</h1>
+<p class="muted">Changes apply to files analysed after you save. Defaults were tuned so that no rule fires on a benign working day.</p></div></div>
+<div class="grid2">
+<section class="panel">
+  <h2>Thresholds</h2>
+  <form method="post">
+    {% for f in fields %}
+    <div class="field">
+      <label for="{{ f.name }}">{{ f.label }}<br><span class="small muted">Default {{ f.default }}</span></label>
+      <input id="{{ f.name }}" type="number" step="any" min="0" name="{{ f.name }}" value="{{ f.value }}" required>
+    </div>
+    {% endfor %}
+    <p><button class="btn" type="submit">Save thresholds</button></p>
+  </form>
+</section>
+<section class="panel">
+  <h2>Blacklist (rule R4)</h2>
+  <p class="small muted">Read from <code>data/blacklist.csv</code>. Replace the examples with a threat-intelligence feed.</p>
+  <table><thead><tr><th>Blacklisted IP</th></tr></thead><tbody>
+  {% for ip in blacklist %}<tr><td>{{ ip }}</td></tr>{% else %}<tr><td class="muted">The blacklist is empty.</td></tr>{% endfor %}
+  </tbody></table>
+</section>
+</div>
+{% endblock %}

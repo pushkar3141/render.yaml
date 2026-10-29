@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block title %}Reports{% endblock %}
+{% block content %}
+<div class="head"><div><h1>Reports</h1>
+<p class="muted">PDF summaries and CSV alert exports, stored in {{ 'Supabase Storage' if storage_kind=='supabase' else 'the local storage folder' }}.</p></div></div>
+<section class="panel">
+{% if items %}
+<table><thead><tr><th>Created (UTC)</th><th>Traffic file</th><th>Type</th><th></th></tr></thead><tbody>
+{% for r in items %}<tr><td>{{ r.created.strftime('%d %b %Y %H:%M') }}</td>
+<td><a href="{{ url_for('overview', upload_id=r.upload_id) }}">{{ r.upload }}</a></td>
+<td>{{ 'PDF summary' if r.kind=='pdf' else 'CSV of all alerts' }}</td>
+<td><a href="{{ r.url }}">Download</a></td></tr>{% endfor %}
+</tbody></table>
+{% else %}
+<p class="empty">No reports yet. Open an analysis and choose Generate report.</p>
+{% endif %}
+</section>
+{% endblock %}

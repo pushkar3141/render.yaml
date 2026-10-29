@@ -1,0 +1,28 @@
+# Render Blueprint: New > Blueprint > connect this repository.
+services:
+  - type: web
+    name: netmon
+    runtime: python
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn -w 1 --timeout 120 -b 0.0.0.0:$PORT app:app
+    healthCheckPath: /healthz
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.13.5
+      - key: MALLOC_ARENA_MAX     # fewer malloc arenas: lower memory on the 512 MB plan
+        value: "2"
+      - key: MAX_FLOWS
+        value: "300000"
+      - key: SECRET_KEY
+        generateValue: true
+      - key: ADMIN_PASSWORD
+        sync: false          # set in the Render dashboard
+      - key: DATABASE_URL
+        sync: false          # Supabase > Project settings > Database > connection string (session pooler)
+      - key: SUPABASE_URL
+        sync: false
+      - key: SUPABASE_SERVICE_KEY
+        sync: false
+      - key: SUPABASE_BUCKET
+        value: reports

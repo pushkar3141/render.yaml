@@ -1,0 +1,315 @@
+{
+  "per_rule": [
+    {
+      "rule": "R1 Port scan",
+      "target": "PortScan (Fri)",
+      "tp": 158553,
+      "fp": 1,
+      "fn": 377,
+      "tn": 127500,
+      "recall": 0.997627886490908,
+      "precision": 0.9999936930004919,
+      "f1": 0.998809388819594,
+      "fpr": 7.843075740582427e-06,
+      "accuracy": 0.9986803104412582
+    },
+    {
+      "rule": "R2 Brute force",
+      "target": "FTP/SSH-Patator (Tue)",
+      "tp": 13833,
+      "fp": 0,
+      "fn": 2,
+      "tn": 432057,
+      "recall": 0.9998554391037224,
+      "precision": 1.0,
+      "f1": 0.9999277143270204,
+      "fpr": 0.0,
+      "accuracy": 0.9999955146089188
+    },
+    {
+      "rule": "R3 Traffic spike",
+      "target": "DoS + DDoS (Wed, Fri)",
+      "tp": 380194,
+      "fp": 40669,
+      "fn": 494,
+      "tn": 497057,
+      "recall": 0.9987023494305047,
+      "precision": 0.9033676041847347,
+      "f1": 0.9486458129301816,
+      "fpr": 0.07563145542525375,
+      "accuracy": 0.9551803435052166
+    },
+    {
+      "rule": "R5 Z-score outlier",
+      "target": "All attacks (4 files)",
+      "tp": 11,
+      "fp": 1846,
+      "fn": 553453,
+      "tn": 1095438,
+      "recall": 1.9874824740181835e-05,
+      "precision": 0.0059235325794291865,
+      "f1": 3.9616726181793946e-05,
+      "fpr": 0.0016823356578606814,
+      "accuracy": 0.6636076493807656
+    },
+    {
+      "rule": "R6 IQR outlier",
+      "target": "All attacks (4 files)",
+      "tp": 0,
+      "fp": 48,
+      "fn": 553464,
+      "tn": 1097236,
+      "recall": 0.0,
+      "precision": 0.0,
+      "f1": 0.0,
+      "fpr": 4.374437246875011e-05,
+      "accuracy": 0.6646901889325324
+    },
+    {
+      "rule": "Isolation Forest",
+      "target": "All attacks (4 files)",
+      "tp": 52825,
+      "fp": 66578,
+      "fn": 500639,
+      "tn": 1030706,
+      "recall": 0.0954443288091005,
+      "precision": 0.442409319698835,
+      "f1": 0.15701468492287482,
+      "fpr": 0.06067526729634261,
+      "accuracy": 0.656387892034399
+    },
+    {
+      "rule": "Combined rules R1-R4",
+      "target": "All attacks (4 files)",
+      "tp": 552580,
+      "fp": 50553,
+      "fn": 884,
+      "tn": 1046731,
+      "recall": 0.9984027868117891,
+      "precision": 0.9161826661781066,
+      "f1": 0.9555272925660364,
+      "fpr": 0.046071026279431763,
+      "accuracy": 0.9688401863882313
+    },
+    {
+      "rule": "Combined, all detectors",
+      "target": "All attacks (4 files)",
+      "tp": 552599,
+      "fp": 85562,
+      "fn": 865,
+      "tn": 1011722,
+      "recall": 0.998437116054522,
+      "precision": 0.8659241163280113,
+      "f1": 0.9274713101856707,
+      "fpr": 0.07797616660773328,
+      "accuracy": 0.9476437348402058
+    }
+  ],
+  "monday_false_flags": {
+    "r1": 0,
+    "r2": 0,
+    "r3": 0,
+    "r4": 0,
+    "r5": 741,
+    "r6": 15,
+    "ml": 10364,
+    "flows": 529903
+  },
+  "recall_by_class": [
+    {
+      "label": "DDoS",
+      "flows": 128027,
+      "core_recall": 1.0,
+      "any_recall": 1.0
+    },
+    {
+      "label": "DoS GoldenEye",
+      "flows": 10293,
+      "core_recall": 1.0,
+      "any_recall": 1.0
+    },
+    {
+      "label": "DoS Hulk",
+      "flows": 231073,
+      "core_recall": 0.9999091196288619,
+      "any_recall": 0.9999091196288619
+    },
+    {
+      "label": "DoS Slowhttptest",
+      "flows": 5499,
+      "core_recall": 0.9154391707583197,
+      "any_recall": 0.9154391707583197
+    },
+    {
+      "label": "DoS slowloris",
+      "flows": 5796,
+      "core_recall": 0.9986197377501725,
+      "any_recall": 0.9986197377501725
+    },
+    {
+      "label": "FTP-Patator",
+      "flows": 7938,
+      "core_recall": 0.999748047367095,
+      "any_recall": 0.999748047367095
+    },
+    {
+      "label": "Heartbleed",
+      "flows": 11,
+      "core_recall": 0.0,
+      "any_recall": 1.0
+    },
+    {
+      "label": "PortScan",
+      "flows": 158930,
+      "core_recall": 0.997627886490908,
+      "any_recall": 0.9976782231170955
+    },
+    {
+      "label": "SSH-Patator",
+      "flows": 5897,
+      "core_recall": 1.0,
+      "any_recall": 1.0
+    }
+  ],
+  "r1_sensitivity": [
+    {
+      "threshold": 10,
+      "recall": 0.997627886490908,
+      "fpr": 7.843075740582427e-06,
+      "precision": 0.9999936930004919,
+      "monday_false_flows": 843
+    },
+    {
+      "threshold": 20,
+      "recall": 0.997627886490908,
+      "fpr": 7.843075740582427e-06,
+      "precision": 0.9999936930004919,
+      "monday_false_flows": 0
+    },
+    {
+      "threshold": 30,
+      "recall": 0.997627886490908,
+      "fpr": 7.843075740582427e-06,
+      "precision": 0.9999936930004919,
+      "monday_false_flows": 0
+    },
+    {
+      "threshold": 50,
+      "recall": 0.997627886490908,
+      "fpr": 7.843075740582427e-06,
+      "precision": 0.9999936930004919,
+      "monday_false_flows": 0
+    },
+    {
+      "threshold": 100,
+      "recall": 0.997627886490908,
+      "fpr": 7.843075740582427e-06,
+      "precision": 0.9999936930004919,
+      "monday_false_flows": 0
+    },
+    {
+      "threshold": 200,
+      "recall": 0.997627886490908,
+      "fpr": 7.843075740582427e-06,
+      "precision": 0.9999936930004919,
+      "monday_false_flows": 0
+    }
+  ],
+  "dataset": [
+    {
+      "file": "Monday (benign reference)",
+      "flows": 529903,
+      "benign": 529903,
+      "attacks": "none"
+    },
+    {
+      "file": "Tuesday",
+      "flows": 445892,
+      "benign": 432057,
+      "attacks": "FTP-Patator 7,938; SSH-Patator 5,897"
+    },
+    {
+      "file": "Wednesday",
+      "flows": 692682,
+      "benign": 440010,
+      "attacks": "DoS Hulk 231,073; DoS GoldenEye 10,293; DoS slowloris 5,796; DoS Slowhttptest 5,499; Heartbleed 11"
+    },
+    {
+      "file": "Friday PortScan",
+      "flows": 286431,
+      "benign": 127501,
+      "attacks": "PortScan 158,930"
+    },
+    {
+      "file": "Friday DDoS",
+      "flows": 225743,
+      "benign": 97716,
+      "attacks": "DDoS 128,027"
+    }
+  ],
+  "timing": [
+    {
+      "file": "Monday (benign reference)",
+      "flows": 529903,
+      "seconds": 4.79,
+      "sec_per_100k": 0.9
+    },
+    {
+      "file": "Tuesday",
+      "flows": 445892,
+      "seconds": 4.34,
+      "sec_per_100k": 0.97
+    },
+    {
+      "file": "Wednesday",
+      "flows": 692682,
+      "seconds": 5.3,
+      "sec_per_100k": 0.76
+    },
+    {
+      "file": "Friday PortScan",
+      "flows": 286431,
+      "seconds": 2.61,
+      "sec_per_100k": 0.91
+    },
+    {
+      "file": "Friday DDoS",
+      "flows": 225743,
+      "seconds": 1.24,
+      "sec_per_100k": 0.55
+    }
+  ],
+  "overall_sec_per_100k": 0.84,
+  "alerts_per_file": {
+    "Monday (benign reference)": {
+      "ML": 5486,
+      "R5": 538,
+      "R6": 7
+    },
+    "Tuesday": {
+      "ML": 8654,
+      "R5": 435,
+      "R3": 13,
+      "R6": 10,
+      "R2": 2
+    },
+    "Wednesday": {
+      "ML": 4548,
+      "R5": 488,
+      "R3": 15,
+      "R6": 8
+    },
+    "Friday PortScan": {
+      "ML": 1410,
+      "R5": 157,
+      "R3": 6,
+      "R1": 3
+    },
+    "Friday DDoS": {
+      "ML": 672,
+      "R5": 75,
+      "R3": 3
+    }
+  },
+  "generated": "2026-10-25 11:01"
+}

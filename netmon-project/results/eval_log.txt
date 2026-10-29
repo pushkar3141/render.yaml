@@ -1,0 +1,33 @@
+Monday (benign reference): 529,903 flows, 6031 alerts, 4.8s
+Tuesday: 445,892 flows, 9114 alerts, 4.3s
+Wednesday: 692,682 flows, 5059 alerts, 5.3s
+Friday PortScan: 286,431 flows, 1576 alerts, 2.6s
+Friday DDoS: 225,743 flows, 750 alerts, 1.2s
+                   rule  recall  precision     f1    fpr
+           R1 Port scan  0.9976     1.0000 0.9988 0.0000
+         R2 Brute force  0.9999     1.0000 0.9999 0.0000
+       R3 Traffic spike  0.9987     0.9034 0.9486 0.0756
+     R5 Z-score outlier  0.0000     0.0059 0.0000 0.0017
+         R6 IQR outlier  0.0000     0.0000 0.0000 0.0000
+       Isolation Forest  0.0954     0.4424 0.1570 0.0607
+   Combined rules R1-R4  0.9984     0.9162 0.9555 0.0461
+Combined, all detectors  0.9984     0.8659 0.9275 0.0780
+Monday false flags: {'r1': 0, 'r2': 0, 'r3': 0, 'r4': 0, 'r5': 741, 'r6': 15, 'ml': 10364, 'flows': 529903}
+           label  flows  core_recall  any_recall
+            DDoS 128027       1.0000      1.0000
+   DoS GoldenEye  10293       1.0000      1.0000
+        DoS Hulk 231073       0.9999      0.9999
+DoS Slowhttptest   5499       0.9154      0.9154
+   DoS slowloris   5796       0.9986      0.9986
+     FTP-Patator   7938       0.9997      0.9997
+      Heartbleed     11       0.0000      1.0000
+        PortScan 158930       0.9976      0.9977
+     SSH-Patator   5897       1.0000      1.0000
+ threshold  recall  fpr  precision  monday_false_flows
+        10  0.9976  0.0        1.0                 843
+        20  0.9976  0.0        1.0                   0
+        30  0.9976  0.0        1.0                   0
+        50  0.9976  0.0        1.0                   0
+       100  0.9976  0.0        1.0                   0
+       200  0.9976  0.0        1.0                   0
+sec per 100k flows: 0.84

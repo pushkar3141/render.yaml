@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block title %}Alerts{% endblock %}
+{% block content %}
+<div class="head">
+  <div><h1>Alerts</h1><p class="muted">{{ up.filename }}: {{ total|num }} alerts match the filters{% if total > 500 %} (showing the first 500){% endif %}</p></div>
+  <a class="btn ghost" href="{{ url_for('alerts_csv', upload_id=up.id) }}">Download all as CSV</a>
+</div>
+<form class="filters panel" method="get">
+  <span class="muted">Severity</span>
+  {% for s in severities %}
+  <label><input type="checkbox" name="severity" value="{{ s }}" {{ 'checked' if s in sev }}> <span class="sev {{ s }}">{{ s }}</span></label>
+  {% endfor %}
+  <label>Rule <select name="rule"><option value="">All</option>
+    {% for r in rules %}<option {{ 'selected' if r==rule }}>{{ r }}</option>{% endfor %}</select></label>
+  <label>IP <input type="text" name="ip" value="{{ ip }}" placeholder="e.g. 172.16.0.1" size="14"></label>
+  <button class="btn" type="submit">Apply filters</button>
+</form>
+<section class="panel">
+{% if rows %}
+<div class="tablewrap"><table>
+  <thead><tr><th>Time</th><th>Severity</th><th>Rule</th><th>Alert</th><th>Source</th><th>Destination</th><th class="num">Flows</th><th>Evidence</th><th>Suggested firewall action</th></tr></thead>
+  <tbody>
+  {% for a in rows %}
+  <tr>
+    <td>{{ a.first_seen.strftime('%d %b %H:%M') }}<br><span class="small muted">{{ a.minutes }} min</span></td>
+    <td><span class="sev {{ a.severity }}">{{ a.severity }}</span></td>
+    <td>{{ a.rule }}</td><td>{{ a.name }}</td>
+    <td>{% if a.src_ip != 'multiple' %}<a href="{{ url_for('ip_page', upload_id=up.id, ip=a.src_ip) }}">{{ a.src_ip }}</a>{% else %}multiple{% endif %}</td>
+    <td><a href="{{ url_for('ip_page', upload_id=up.id, ip=a.dst_ip) }}">{{ a.dst_ip }}</a>{% if a.dst_port is not none %}:{{ a.dst_port }}{% endif %}</td>
+    <td class="num">{{ a.flows|num }}</td>
+    <td class="small">{{ a.evidence }}</td>
+    <td class="action"><code>{{ a.action }}</code></td>
+  </tr>
+  {% endfor %}
+  </tbody></table></div>
+{% else %}
+  <p class="empty">No alerts match these filters. Tick more severities or clear the rule and IP filters.</p>
+{% endif %}
+</section>
+{% endblock %}
